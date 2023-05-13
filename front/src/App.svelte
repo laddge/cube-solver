@@ -15,20 +15,6 @@
   let cubestr: string = 'URFDLB'
   let result: string = ''
 
-  $: {
-    if (Object.values(cube).filter(val => val == radioValue).length > 8) {
-      let ok: boolean = false
-      for (let i: number = 1; i < 6; i++) {
-        if (Object.values(cube).filter(val => val == (radioValue + i) % 6) <= 8) {
-          radioValue = (radioValue + i) % 6
-          ok = true
-          break
-        }
-      }
-      if (!ok) radioValue = -1
-    }
-  }
-
   const write = (id: string) => {
     if (id.slice(-1) == '5') retdrn
     cube[id] = radioValue
@@ -74,15 +60,22 @@
     </div>
     <div class="mt-3 flex gap-2 justify-center">
       {#each colors as color, i}
-        <input type="radio" name="color" bind:group={radioValue} value={i} disabled={Object.values(cube).filter(val => val == i).length > 8} class={`w-12 h-12 rounded radio bg-${color} checked:bg-${color}`} />
+        <input type="radio" name="color" bind:group={radioValue} value={i} class={`w-12 h-12 rounded radio bg-${color} checked:bg-${color}`} />
+      {/each}
+    </div>
+    <div class="mt-1 flex gap-2 justify-center">
+      {#each colors as _, i}
+        <div class="w-12 text-center">
+          {Object.values(cube).filter(val => val == i).length}
+        </div>
       {/each}
     </div>
   </div>
-  <div class="mt-3 text-center">
+  <div class="mt-3 py-3 text-center overflow-x-auto">
     {cubestr}
   </div>
-  <button on:click={solve} disabled={cubestr.length != 54} class="btn btn-primary w-full max-w-xs block mx-auto mt-3">Solve</button>
-  <div class="mt-3 text-center">
+  <button on:click={solve} disabled={cubestr.length != 54 || cubestr.split('').sort().join('') != 'BBBBBBBBBDDDDDDDDDFFFFFFFFFLLLLLLLLLRRRRRRRRRUUUUUUUUU'} class="btn btn-primary w-full max-w-xs block mx-auto mt-3">Solve</button>
+  <div class="mt-3 py-3 text-center overflow-x-auto">
     {result}
   </div>
 </div>
