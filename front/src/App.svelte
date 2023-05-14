@@ -1,7 +1,8 @@
 <script lang="ts">
   import axios from 'axios'
+  import { colors } from './constant'
+  import Move from './components/Move.svelte'
 
-  const colors = ['blue-500', 'red-500', 'white', 'green-500', 'orange-500', 'yellow-500']
   const cube = {
     U5: 0,
     R5: 1,
@@ -13,10 +14,11 @@
 
   let radioValue: number = 0
   let cubestr: string = 'URFDLB'
-  let result: string = ''
+  let result: string[] = []
+  $: resultSfcs = result.join('').replace(/['2]/g, '').split('')
 
   const write = (id: string) => {
-    if (id.slice(-1) == '5') retdrn
+    if (id.slice(-1) == '5') return
     cube[id] = radioValue
     cubestr = ''
     const sfcs = ['U', 'R', 'F', 'D', 'L', 'B']
@@ -40,7 +42,7 @@
 <div class="hidden bg-gray-500 bg-blue-500 bg-red-500 bg-white bg-green-500 bg-orange-500 bg-yellow-500 checked:bg-gray-500 checked:bg-blue-500 checked:bg-red-500 checked:bg-white checked:bg-green-500 checked:bg-orange-500 checked:bg-yellow-500" />
 <div class="p-6">
   <div>
-    <div class="overflow-x-auto whitespace-nowrap p-6 max-w-[39rem] mx-auto">
+    <div class="overflow-x-auto whitespace-nowrap p-6 max-w-[39.25rem] mx-auto">
       {#each [
         ['', '', '', 'U1', 'U2', 'U3'],
         ['', '', '', 'U4', 'U5', 'U6'],
@@ -78,4 +80,47 @@
   <div class="mt-3 py-3 text-center overflow-x-auto">
     {result}
   </div>
+  {#each result as move, i}
+    {#if (resultSfcs.slice(0, i + 1).reverse().indexOf('F') + i + 2) % (i + 2) <= (resultSfcs.slice(0, i + 1).reverse().indexOf('B') + i + 2) % (i + 2)}
+      {#if (resultSfcs.slice(0, i).reverse().indexOf('F') + i + 2) % (i + 2) > (resultSfcs.slice(0, i).reverse().indexOf('B') + i + 2) % (i + 2)}
+        <div class="text-xl font-bold text-center my-3">
+          <div class="arrows" />
+          180°
+        </div>
+      {/if}
+      <Move {move} back={false} />
+    {:else}
+      {#if (resultSfcs.slice(0, i).reverse().indexOf('F') + i + 2) % (i + 2) <= (resultSfcs.slice(0, i).reverse().indexOf('B') + i + 2) % (i + 2)}
+        <div class="text-xl font-bold text-center my-3">
+          <div class="arrows" />
+          180°
+        </div>
+      {/if}
+      <Move {move} back={true} />
+    {/if}
+  {/each}
 </div>
+
+<style>
+  .arrows {
+    @apply w-24 h-16 bg-accent mx-auto;
+    clip-path: polygon(
+      calc(100% / 6) 25%,
+      calc(100% * 9 / 24) calc(100% / 16),
+      calc(100% * 9 / 24) calc(100% * 3 / 16),
+      calc(100% * 7 / 8) calc(100% * 3 / 16),
+      calc(100% * 7 / 8) calc(100% * 5 / 16),
+      calc(100% * 9 / 24) calc(100% * 5 / 16),
+      calc(100% * 9 / 24) calc(100% * 7 / 16),
+      calc(100% / 6) 25%,
+      calc(100% / 6) 75%,
+      calc(100% * 9 / 24) calc(100% * 9 / 16),
+      calc(100% * 9 / 24) calc(100% * 11 / 16),
+      calc(100% * 7 / 8) calc(100% * 11 / 16),
+      calc(100% * 7 / 8) calc(100% * 13 / 16),
+      calc(100% * 9 / 24) calc(100% * 13 / 16),
+      calc(100% * 9 / 24) calc(100% * 15 / 16),
+      calc(100% / 6) 75%
+      );
+  }
+</style>
