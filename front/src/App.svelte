@@ -41,6 +41,7 @@
 
 <div class="hidden bg-gray-500 bg-blue-500 bg-red-500 bg-white bg-green-500 bg-orange-500 bg-yellow-500 checked:bg-gray-500 checked:bg-blue-500 checked:bg-red-500 checked:bg-white checked:bg-green-500 checked:bg-orange-500 checked:bg-yellow-500" />
 <div class="p-6">
+  <h1 class="text-4xl font-bold text-center my-6">Cube Solver</h1>
   <div>
     <div class="overflow-x-auto whitespace-nowrap p-6 max-w-[39.25rem] mx-auto">
       {#each [
